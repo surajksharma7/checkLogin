@@ -1,9 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hello World</title>
+  <title>Firebase Form</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body { font-family: sans-serif; padding: 2rem; background: #f4f4f4; }
+    form { background: white; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    input, textarea { display: block; margin-bottom: 1rem; width: 100%; padding: 0.5rem; }
+  </style>
 </head>
 <body>
-    <h1>Hello, World!</h1>
+  <h1>Submit Your Message</h1>
+  <form id="contact-form">
+    <input type="text" id="name" placeholder="Your name" required />
+    <textarea id="message" placeholder="Your message" required></textarea>
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- Firebase SDKs -->
+  <script type="module">
+    // Import Firebase modules
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDpDCWfXEBUcaUmoQmsGSdF_--JhFRLPX4",
+  authDomain: "suajksharma.firebaseapp.com",
+  projectId: "suajksharma",
+  storageBucket: "suajksharma.firebasestorage.app",
+  messagingSenderId: "193154399799",
+  appId: "1:193154399799:web:2fb01d2709e867b8c5c9b2",
+  measurementId: "G-4RS8M1L3SL"
+};
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+
+    // Initialize Firestore
+    const db = getFirestore(app);
+
+    // Form submission handler
+    document.getElementById('contact-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const message = document.getElementById('message').value;
+
+      try {
+        // Add data to Firestore
+        await addDoc(collection(db, 'messages'), {
+          name,
+          message,
+          timestamp: new Date()
+        });
+
+        alert('Message submitted successfully!');
+        document.getElementById('contact-form').reset();
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    });
+  </script>
 </body>
 </html>
